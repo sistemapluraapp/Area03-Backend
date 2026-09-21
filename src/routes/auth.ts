@@ -31,9 +31,19 @@ export async function signup(c: Context<AppEnv>) {
 
   const anon = getAnonClient(c)
 
+  const { data: convite, error: conviteError } = await anon.rpc('validar_convite_gov', { p_token: body.token })
+  if (conviteError) {
+    return c.json({ error: conviteError.message }, 500)
+  }
+  const linhaConvite = Array.isArray(convite) ? convite[0] : null
+  if (!linhaConvite) {
+    return c.json({ error: 'Link de cadastro inválido ou expirado' }, 404)
+  }
+
   const { data: signUpData, error: signUpError } = await anon.auth.signUp({
     email: body.email,
     password: body.password,
+    options: { data: { tipo: 'gov', nome: body.nome, orgao: body.orgao, convite_token: body.token } },
   })
 
   if (signUpError || !signUpData.user) {
@@ -47,25 +57,9 @@ export async function signup(c: Context<AppEnv>) {
     )
   }
 
-  const asUser = getAnonClient(c)
-  await asUser.auth.setSession({
-    access_token: signUpData.session.access_token,
-    refresh_token: signUpData.session.refresh_token,
-  })
-
-  const { data: govConta, error: rpcError } = await asUser.rpc('cadastrar_conta_gov', {
-    p_token: body.token,
-    p_nome: body.nome,
-    p_orgao: body.orgao,
-  })
-
-  if (rpcError) {
-    return c.json({ error: `Conta criada no Auth, mas falhou ao registrar o perfil: ${rpcError.message}` }, 400)
-  }
-
   return c.json(
     {
-      gov_conta: govConta,
+      user: { id: signUpData.user.id, email: body.email, nome: body.nome },
       access_token: signUpData.session.access_token,
       refresh_token: signUpData.session.refresh_token,
     },
