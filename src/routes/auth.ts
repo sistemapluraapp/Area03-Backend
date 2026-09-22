@@ -1,5 +1,5 @@
 import type { Context } from 'hono'
-import { getAnonClient } from '../lib/supabase'
+import { getAnonClient, getUserClient } from '../lib/supabase'
 import type { AppEnv } from '../types'
 
 interface SignupBody {
@@ -81,6 +81,14 @@ export async function login(c: Context<AppEnv>) {
 
   if (error || !data.session) {
     return c.json({ error: 'E-mail ou senha inválidos' }, 401)
+  }
+
+  // Registro de login para os indicadores da Área04 — melhor esforço.
+  try {
+    const userClient = getUserClient(c, data.session.access_token)
+    await userClient.from('login_eventos').insert({ origem: 'gov', gov_conta_id: data.user.id })
+  } catch {
+    // ignora
   }
 
   return c.json({
