@@ -1,0 +1,12 @@
+name = "area03-backend"
+main = "src/index.ts"
+compatibility_date = "2026-09-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+SUPABASE_URL = "https://uoembacxxnkuwldmdgcu.supabase.co"
+# A anon/publishable key do Supabase é feita para ser pública (protegida
+# pelo RLS, não por sigilo) — é a mesma usada nos frontends. Por isso vive
+# aqui como var normal, não como secret.
+SUPABASE_ANON_KEY = "sb_publishable_LHnLAUk6M4ek94aokap89g__nL-ySby"
+AREA = "03"
