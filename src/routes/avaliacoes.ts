@@ -1,5 +1,6 @@
 import type { Context } from 'hono'
 import { enviarEmail } from '../lib/email'
+import { escaparHtml, montarAviso } from '../lib/emailLayout'
 import type { AppEnv } from '../types'
 
 export async function responderAvaliacao(c: Context<AppEnv>) {
@@ -31,8 +32,13 @@ export async function responderAvaliacao(c: Context<AppEnv>) {
       await enviarEmail(
         c.env.RESEND_API_KEY,
         email,
-        '[Plura] Você recebeu uma resposta à sua avaliação',
-        `<p>Olá,</p><p>A página que você avaliou respondeu à sua avaliação:</p><p>"${trecho}"</p><p>Atenciosamente,<br/>Equipe Plura</p>`
+        'Você recebeu uma resposta à sua avaliação na Plura',
+        montarAviso(
+          'Sua avaliação foi respondida',
+          `<p>A página que você avaliou respondeu ao seu comentário:</p><p style="padding:12px 16px;border-left:4px solid #0062e6;background:#f2f6ff;">${escaparHtml(trecho)}</p>`,
+          { texto: 'Ver na Plura', link: 'https://plura.app.br/perfil' },
+        ),
+        c.env.EMAIL_REMETENTE,
       )
     } else if (rpcError) {
       console.error('Erro ao notificar resposta de avaliação:', rpcError.message)

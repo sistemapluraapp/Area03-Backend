@@ -15,6 +15,7 @@ import {
   marcarComoLida,
   marcarTodasComoLidas,
 } from './routes/notificacoes'
+import { obterConteudoPagina, reenviarConfirmacao } from './routes/conteudo'
 import type { AppEnv } from './types'
 
 const app = new Hono<AppEnv>()
@@ -28,10 +29,12 @@ app.get('/convites/:token', validarConvite)
 app.post('/auth/signup', signup)
 app.post('/auth/login', login)
 app.post('/auth/refresh', refresh)
+app.post('/auth/reenviar-confirmacao', reenviarConfirmacao)
+app.get('/conteudo/:chave', obterConteudoPagina)
 
 app.use('*', async (c, next) => {
-  const publicas = ['/health', '/auth/login', '/auth/signup', '/auth/refresh']
-  if (publicas.includes(c.req.path) || c.req.path.startsWith('/convites/')) return next()
+  const publicas = ['/health', '/auth/login', '/auth/signup', '/auth/refresh', '/auth/reenviar-confirmacao']
+  if (publicas.includes(c.req.path) || c.req.path.startsWith('/convites/') || c.req.path.startsWith('/conteudo/')) return next()
   return requireAuth(c, next)
 })
 
