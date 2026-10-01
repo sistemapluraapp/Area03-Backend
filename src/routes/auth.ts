@@ -9,6 +9,7 @@ interface SignupBody {
   orgao?: string
   email?: string
   password?: string
+  aceite_termos?: boolean
 }
 
 export async function validarConvite(c: Context<AppEnv>) {
@@ -41,10 +42,14 @@ export async function signup(c: Context<AppEnv>) {
     return c.json({ error: 'Link de cadastro inválido ou expirado' }, 404)
   }
 
+  if (body.aceite_termos !== true) {
+    return c.json({ error: 'É preciso aceitar os termos e condições para criar a conta' }, 400)
+  }
+
   const { data: signUpData, error: signUpError } = await anon.auth.signUp({
     email: body.email,
     password: body.password,
-    options: { emailRedirectTo: urlContaConfirmada(c), data: { tipo: 'gov', nome: body.nome, orgao: body.orgao, convite_token: body.token } },
+    options: { emailRedirectTo: urlContaConfirmada(c), data: { termos_aceitos: { chave: 'termos_gov', em: new Date().toISOString() }, tipo: 'gov', nome: body.nome, orgao: body.orgao, convite_token: body.token } },
   })
 
   if (signUpError || !signUpData.user) {

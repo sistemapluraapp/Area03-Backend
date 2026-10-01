@@ -34,3 +34,14 @@ export async function reenviarConfirmacao(c: Context<AppEnv>) {
   }
   return c.json({ message: 'Se houver um cadastro pendente para este e-mail, enviamos um novo link de confirmação.' })
 }
+
+// Termos e condições editados no ADM (Comunicação → Termos e condições)
+export async function obterTermo(c: Context<AppEnv>) {
+  const chave = c.req.param('chave') as string
+  if (!/^termos_[a-z0-9_]+$/.test(chave)) return c.json({ error: 'Termo não encontrado' }, 404)
+  const { data, error } = await getAnonClient(c).from('termos').select('chave, titulo, conteudo_html, atualizado_em').eq('chave', chave).maybeSingle()
+  if (error) return c.json({ error: error.message }, 500)
+  if (!data) return c.json({ error: 'Termo não encontrado' }, 404)
+  c.header('Cache-Control', 'public, max-age=60')
+  return c.json(data)
+}
