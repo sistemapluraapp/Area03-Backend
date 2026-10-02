@@ -5,6 +5,7 @@ import { validarConvite, signup, login, refresh } from './routes/auth'
 import { criarPagina, minhasPaginas, obterPagina, atualizarPagina, uploadLogo, uploadCapa, excluirPagina, restaurarPagina } from './routes/paginas'
 import { adicionarFoto, adicionarLink, atualizarMidia, removerMidia } from './routes/midias'
 import { criarExperiencia, atualizarExperiencia, removerExperiencia, uploadImagemExperiencia } from './routes/experiencias'
+import { atualizarEvento, criarEvento, interessadosEvento, listarEventos, removerEvento, uploadImagemEvento } from './routes/eventos'
 import { listarOpcoes } from './routes/opcoes'
 import { convidarColaborador, removerColaborador } from './routes/colaboradores'
 import { responderAvaliacao } from './routes/avaliacoes'
@@ -58,6 +59,13 @@ app.post('/paginas/:id/experiencias', criarExperiencia)
 app.put('/paginas/:id/experiencias/:experienciaId', atualizarExperiencia)
 app.delete('/paginas/:id/experiencias/:experienciaId', removerExperiencia)
 app.post('/paginas/:id/experiencias/:experienciaId/imagem', uploadImagemExperiencia)
+
+app.get('/paginas/:id/eventos', listarEventos)
+app.post('/paginas/:id/eventos', criarEvento)
+app.put('/paginas/:id/eventos/:eventoId', atualizarEvento)
+app.delete('/paginas/:id/eventos/:eventoId', removerEvento)
+app.post('/paginas/:id/eventos/:eventoId/imagem', uploadImagemEvento)
+app.get('/paginas/:id/eventos/:eventoId/interessados', interessadosEvento)
 
 app.get('/opcoes', listarOpcoes)
 
