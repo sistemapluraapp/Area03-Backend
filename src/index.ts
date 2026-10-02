@@ -16,6 +16,7 @@ import {
   marcarTodasComoLidas,
 } from './routes/notificacoes'
 import { obterConteudoPagina, obterTermo, reenviarConfirmacao } from './routes/conteudo'
+import { listarCidades, listarEstados } from './routes/localidades'
 import type { AppEnv } from './types'
 
 const app = new Hono<AppEnv>()
@@ -72,5 +73,8 @@ app.get('/notificacoes', listarNotificacoes)
 app.get('/notificacoes/contagem-nao-lidas', contagemNaoLidas)
 app.patch('/notificacoes/:id/ler', marcarComoLida)
 app.patch('/notificacoes/marcar-todas-lidas', marcarTodasComoLidas)
+
+app.get('/localidades/:pais/estados', listarEstados)
+app.get('/localidades/:pais/estados/:estado/cidades', listarCidades)
 
 export default app

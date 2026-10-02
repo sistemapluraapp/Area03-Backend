@@ -16,13 +16,13 @@ export async function validarConvite(c: Context<AppEnv>) {
   const token = c.req.param('token')
   const anon = getAnonClient(c)
 
-  const { data, error } = await anon.rpc('validar_convite_gov', { p_token: token })
+  const { data, error } = await anon.rpc('ver_convite_gov', { p_token: token })
   if (error) return c.json({ error: error.message }, 500)
 
   const linha = Array.isArray(data) ? data[0] : null
   if (!linha) return c.json({ error: 'Link de cadastro inválido ou expirado' }, 404)
 
-  return c.json({ cidade: linha.cidade })
+  return c.json({ cidade: linha.cidade, uf: linha.uf, pais: linha.pais, descricao: linha.descricao })
 }
 
 export async function signup(c: Context<AppEnv>) {

@@ -1,6 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 export type Bindings = {
+  CSC_API_KEY?: string
   SUPABASE_URL: string
   // Endereço do frontend Gov (link de confirmação do cadastro)
   FRONTEND_URL: string
