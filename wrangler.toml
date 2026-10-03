@@ -11,8 +11,7 @@ SUPABASE_URL = "https://uoembacxxnkuwldmdgcu.supabase.co"
 SUPABASE_ANON_KEY = "sb_publishable_LHnLAUk6M4ek94aokap89g__nL-ySby"
 AREA = "03"
 FRONTEND_URL = "https://gov.plura.app.br"
-# Trocar para "Plura <nao-responda@plura.app.br>" depois de verificar o domínio no Resend
-EMAIL_REMETENTE = "Plura <onboarding@resend.dev>"
+EMAIL_REMETENTE = "Plura <nao-responda@plura.app.br>"
 
 # Ambiente de teste (branches claude/clever-knuth-bx0368 e claude/stoic-babbage-0gea8e): Worker separado,
 # area03-backend-teste. Publicado por .github/workflows/deploy-teste.yml
@@ -24,5 +23,4 @@ SUPABASE_URL = "https://uoembacxxnkuwldmdgcu.supabase.co"
 SUPABASE_ANON_KEY = "sb_publishable_LHnLAUk6M4ek94aokap89g__nL-ySby"
 AREA = "03"
 FRONTEND_URL = "https://teste.area03-frontend.pages.dev"
-# Trocar para "Plura <nao-responda@plura.app.br>" depois de verificar o domínio no Resend
-EMAIL_REMETENTE = "Plura <onboarding@resend.dev>"
+EMAIL_REMETENTE = "Plura <nao-responda@plura.app.br>"
