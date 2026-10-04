@@ -18,6 +18,7 @@ import {
 } from './routes/notificacoes'
 import { obterConteudoPagina, obterTermo, reenviarConfirmacao } from './routes/conteudo'
 import { listarCidades, listarEstados } from './routes/localidades'
+import { recuperarSenha, redefinirSenha } from './routes/senha'
 import type { AppEnv } from './types'
 
 const app = new Hono<AppEnv>()
@@ -30,13 +31,15 @@ app.get('/health', (c) => c.json({ status: 'ok', area: c.env.AREA, service: 'bac
 app.get('/convites/:token', validarConvite)
 app.post('/auth/signup', signup)
 app.post('/auth/login', login)
+app.post('/auth/recuperar-senha', recuperarSenha)
+app.post('/auth/redefinir-senha', redefinirSenha)
 app.post('/auth/refresh', refresh)
 app.post('/auth/reenviar-confirmacao', reenviarConfirmacao)
 app.get('/conteudo/:chave', obterConteudoPagina)
 app.get('/termos/:chave', obterTermo)
 
 app.use('*', async (c, next) => {
-  const publicas = ['/health', '/auth/login', '/auth/signup', '/auth/refresh', '/auth/reenviar-confirmacao']
+  const publicas = ['/health', '/auth/login', '/auth/signup', '/auth/refresh', '/auth/reenviar-confirmacao', '/auth/recuperar-senha', '/auth/redefinir-senha']
   if (publicas.includes(c.req.path) || c.req.path.startsWith('/convites/') || c.req.path.startsWith('/conteudo/') || c.req.path.startsWith('/termos/')) return next()
   return requireAuth(c, next)
 })
