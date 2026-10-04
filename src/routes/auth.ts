@@ -129,6 +129,8 @@ export async function login(c: Context<AppEnv>) {
 
   return c.json({
     user: { id: data.user.id, email: data.user.email },
+    // 'usuario': conta Plura colaboradora (o menu leva a sessão para a busca)
+    conta: ehGov ? 'gov' : 'usuario',
     access_token: data.session.access_token,
     refresh_token: data.session.refresh_token,
   })
