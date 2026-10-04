@@ -5,6 +5,8 @@ export const AREA_CONFIG = {
   tipoPagina: 'publica',
   escopo: 'b2g',
   colunaCriador: 'criado_por_gov_conta',
-  colunaVinculo: 'gov_conta_id',
-  selectVinculos: 'id, usuario_id, gov_conta_id, papel, created_at',
+  // Página da outra área: só é editada lá
+  outraArea: { nome: 'Plura para empresas', url: 'https://login.plura.app.br' },
+  // Contas Gov e usuários Plura colaboram em páginas Gov
+  aceitaContaGov: true,
 } as const

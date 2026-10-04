@@ -91,7 +91,26 @@ export async function login(c: Context<AppEnv>) {
 
   const userClient = getUserClient(c, data.session.access_token)
 
-  const { data: conta } = await userClient.from('gov_contas').select('suspenso').eq('id', data.user.id).single()
+  const { data: areas } = await userClient.rpc('minhas_areas').maybeSingle<{ eh_gov: boolean; gov: number }>()
+  const ehGov = !!areas?.eh_gov
+
+  // Usuário Plura (não institucional) só entra aqui se colabora com alguma página Gov
+  if (!ehGov && !areas?.gov) {
+    return c.json(
+      {
+        error: 'Sua conta Plura ainda não faz parte da equipe de nenhuma página Gov. Para editar a sua empresa, entre por login.plura.app.br.',
+        codigo: 'sem_paginas_gov',
+        link: 'https://login.plura.app.br',
+      },
+      403,
+    )
+  }
+
+  const { data: conta } = await userClient
+    .from(ehGov ? 'gov_contas' : 'usuarios')
+    .select('suspenso')
+    .eq('id', data.user.id)
+    .single()
   if (conta?.suspenso) {
     return c.json(
       { error: 'Esta conta foi suspensa. Entre em contato com a equipe da Plura.', suspensa: true },
@@ -101,7 +120,9 @@ export async function login(c: Context<AppEnv>) {
 
   // Registro de login para os indicadores da Área04 — melhor esforço.
   try {
-    await userClient.from('login_eventos').insert({ origem: 'gov', gov_conta_id: data.user.id })
+    await userClient.from('login_eventos').insert(
+      ehGov ? { origem: 'gov', gov_conta_id: data.user.id } : { origem: 'gov', usuario_id: data.user.id },
+    )
   } catch {
     // ignora
   }
