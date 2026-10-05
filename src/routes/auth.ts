@@ -91,11 +91,12 @@ export async function login(c: Context<AppEnv>) {
 
   const userClient = getUserClient(c, data.session.access_token)
 
-  const { data: areas } = await userClient.rpc('minhas_areas').maybeSingle<{ eh_gov: boolean; gov: number }>()
+  const { data: areas } = await userClient.rpc('minhas_areas_convites').maybeSingle<{ eh_gov: boolean; gov: number; convites_gov: number }>()
   const ehGov = !!areas?.eh_gov
 
-  // Usuário Plura (não institucional) só entra aqui se colabora com alguma página Gov
-  if (!ehGov && !areas?.gov) {
+  // Usuário Plura (não institucional) só entra aqui se colabora com alguma
+  // página Gov ou tem um convite pendente para aceitar
+  if (!ehGov && !areas?.gov && !areas?.convites_gov) {
     return c.json(
       {
         error: 'Sua conta Plura ainda não faz parte da equipe de nenhuma página Gov. Para editar a sua empresa, entre por login.plura.app.br.',
