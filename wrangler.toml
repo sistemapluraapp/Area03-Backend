@@ -13,6 +13,12 @@ AREA = "03"
 FRONTEND_URL = "https://gov.plura.app.br"
 EMAIL_REMETENTE = "Plura <nao-responda@plura.app.br>"
 
+
+# Arquivos das inscrições em certificações (8c), até 25 MB cada
+[[r2_buckets]]
+binding = "CERTIFICACOES"
+bucket_name = "plura-certificacoes"
+
 # Ambiente de teste (branches claude/clever-knuth-bx0368 e claude/stoic-babbage-0gea8e): Worker separado,
 # area03-backend-teste. Publicado por .github/workflows/deploy-teste.yml
 [env.teste]
@@ -24,3 +30,7 @@ SUPABASE_ANON_KEY = "sb_publishable_LHnLAUk6M4ek94aokap89g__nL-ySby"
 AREA = "03"
 FRONTEND_URL = "https://teste.area03-frontend.pages.dev"
 EMAIL_REMETENTE = "Plura <nao-responda@plura.app.br>"
+
+[[env.teste.r2_buckets]]
+binding = "CERTIFICACOES"
+bucket_name = "plura-certificacoes-teste"
