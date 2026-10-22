@@ -2,6 +2,7 @@ import { acaoInscricao, baixarArquivo, enviarArquivo, removerArquivo, inscreverP
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { requireAuth } from './middleware/auth'
+import { limitarPorIp } from './lib/limite'
 import { validarConvite, signup, login, refresh } from './routes/auth'
 import { criarPagina, minhasPaginas, obterPagina, atualizarPagina, uploadLogo, uploadCapa, excluirPagina, restaurarPagina } from './routes/paginas'
 import { adicionarFoto, adicionarLink, atualizarMidia, removerMidia } from './routes/midias'
@@ -26,6 +27,14 @@ import type { AppEnv } from './types'
 const app = new Hono<AppEnv>()
 
 app.use('*', cors())
+
+// Limite de tentativas por IP (lib/limite.ts)
+app.use('/auth/signup', limitarPorIp('auth'))
+app.use('/auth/login', limitarPorIp('auth'))
+app.use('/auth/recuperar-senha', limitarPorIp('auth'))
+app.use('/auth/redefinir-senha', limitarPorIp('auth'))
+app.use('/auth/reenviar-confirmacao', limitarPorIp('auth'))
+app.use('/convites/*', limitarPorIp('auth'))
 
 app.get('/health', (c) => c.json({ status: 'ok', area: c.env.AREA, service: 'backend' }))
 
@@ -78,7 +87,7 @@ app.get('/paginas/:id/eventos/:eventoId/interessados', interessadosEvento)
 app.get('/opcoes', listarOpcoes)
 
 app.get('/paginas/:id/colaboradores', listarEquipe)
-app.post('/paginas/:id/colaboradores', convidarColaborador)
+app.post('/paginas/:id/colaboradores', limitarPorIp('convite'), convidarColaborador)
 app.patch('/paginas/:id/colaboradores/:vinculoId', atualizarColaborador)
 app.post('/paginas/:id/colaboradores/:vinculoId/reenviar', reenviarConvite)
 

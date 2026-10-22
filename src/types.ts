@@ -1,6 +1,8 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 export type Bindings = {
+  // Limite de tentativas por IP (src/lib/limite.ts); binding ratelimit do wrangler.toml
+  LIMITE?: { limit(opcoes: { key: string }): Promise<{ success: boolean }> }
   CSC_API_KEY?: string
   SUPABASE_URL: string
   // Endereço do frontend Gov (link de confirmação do cadastro)

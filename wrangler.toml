@@ -19,6 +19,15 @@ EMAIL_REMETENTE = "Plura <nao-responda@plura.app.br>"
 binding = "CERTIFICACOES"
 bucket_name = "plura-certificacoes"
 
+
+# Limite de tentativas por IP (src/lib/limite.ts): 20 por minuto em login,
+# cadastro, senha e convites. namespace_id é único por Worker na conta.
+[[unsafe.bindings]]
+name = "LIMITE"
+type = "ratelimit"
+namespace_id = "1103"
+simple = { limit = 20, period = 60 }
+
 # Ambiente de teste (branches claude/clever-knuth-bx0368 e claude/stoic-babbage-0gea8e): Worker separado,
 # area03-backend-teste. Publicado por .github/workflows/deploy-teste.yml
 [env.teste]
@@ -34,3 +43,9 @@ EMAIL_REMETENTE = "Plura <nao-responda@plura.app.br>"
 [[env.teste.r2_buckets]]
 binding = "CERTIFICACOES"
 bucket_name = "plura-certificacoes-teste"
+
+[[env.teste.unsafe.bindings]]
+name = "LIMITE"
+type = "ratelimit"
+namespace_id = "2103"
+simple = { limit = 20, period = 60 }
